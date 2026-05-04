@@ -1,0 +1,1 @@
+<!doctype html><html><body><h1>Upload - <%= mode %></h1><form method="post" enctype="multipart/form-data"><input type="file" name="file"><button>Upload</button></form><ul><% files.forEach(f=>{ %><li><a href="/uploads/<%= f %>"><%= f %></a> | <a href="/download?file=<%= f %>">download</a></li><% }) %></ul><a href="/">Home</a></body></html>

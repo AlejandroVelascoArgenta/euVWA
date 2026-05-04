@@ -1,0 +1,20 @@
+services:
+  euvwa-vulnerable:
+    image: node:20-alpine
+    working_dir: /app
+    volumes:
+      - ./vulnerable:/app
+    command: sh -c "npm install && npm start"
+    ports:
+      - "3000:3000"
+  euvwa-secure:
+    image: node:20-alpine
+    working_dir: /app
+    volumes:
+      - ./secure:/app
+    command: sh -c "npm install && npm start"
+    ports:
+      - "3001:3001"
+    environment:
+      SESSION_SECRET: "change-this-secret"
+      JWT_SECRET: "change-this-jwt-secret"

@@ -1,0 +1,20 @@
+const express=require('express');const router=express.Router();const {db}=require('./db');const {exec}=require('child_process');const multer=require('multer');const path=require('path');const fs=require('fs');
+const upload=multer({dest:path.join(__dirname,'..','public','uploads')});
+function auth(req,res,next){ if(req.session.user) return next(); res.redirect('/login'); }
+router.get('/',(req,res)=>res.render('index',{user:req.session.user,mode:'VULNERABLE'}));
+router.get('/login',(req,res)=>res.render('login',{error:null,mode:'VULNERABLE'}));
+router.post('/login',(req,res)=>{const {username,password}=req.body; const q=`SELECT * FROM users WHERE username='${username}' AND password='${password}'`; db.get(q,(e,user)=>{ if(user){req.session.user=user;res.redirect('/dashboard')} else res.render('login',{error:'Invalid credentials',mode:'VULNERABLE'})});});
+router.get('/dashboard',auth,(req,res)=>res.render('dashboard',{user:req.session.user,mode:'VULNERABLE'}));
+router.get('/search',(req,res)=>{const q=req.query.q||''; db.all(`SELECT id,username,email,role FROM users WHERE username LIKE '%${q}%'`,(e,rows)=>res.render('search',{q,rows:rows||[],mode:'VULNERABLE'}));});
+router.get('/xss-reflected',(req,res)=>res.render('xss-reflected',{name:req.query.name||'',mode:'VULNERABLE'}));
+router.get('/comments',(req,res)=>{db.all('SELECT * FROM comments ORDER BY id DESC',(e,rows)=>res.render('comments',{rows:rows||[],mode:'VULNERABLE'}));});
+router.post('/comments',(req,res)=>{db.run(`INSERT INTO comments(author,message,created_at) VALUES('${req.body.author}','${req.body.message}',datetime('now'))`,()=>res.redirect('/comments'));});
+router.get('/ping',(req,res)=>res.render('ping',{result:null,mode:'VULNERABLE'}));
+router.post('/ping',(req,res)=>{exec(`ping -c 2 ${req.body.host}`,(err,stdout,stderr)=>res.render('ping',{result:stdout+stderr,mode:'VULNERABLE'}));});
+router.get('/upload',(req,res)=>res.render('upload',{files:fs.readdirSync(path.join(__dirname,'..','public','uploads')),mode:'VULNERABLE'}));
+router.post('/upload',upload.single('file'),(req,res)=>{db.run(`INSERT INTO files(filename,originalname,owner) VALUES('${req.file.filename}','${req.file.originalname}','${req.session.user?.username||'anon'}')`);res.redirect('/upload')});
+router.get('/download',(req,res)=>{const file=req.query.file;res.download(path.join(__dirname,'..','public','uploads',file));});
+router.get('/api/users',(req,res)=>db.all('SELECT * FROM users',(e,rows)=>res.json(rows)));
+router.get('/admin',(req,res)=>{ if(req.query.role==='admin' || req.session.user?.role==='admin') return res.send('Admin panel: feature flags, backups, tokens'); res.status(403).send('Forbidden');});
+router.get('/logout',(req,res)=>req.session.destroy(()=>res.redirect('/')));
+module.exports=router;

@@ -1,0 +1,1 @@
+<!doctype html><html><body><h1>Comments - <%= mode %></h1><form method="post"><input name="author" placeholder="author"><textarea name="message"></textarea><button>Post</button></form><% rows.forEach(c=>{ %><article><b><%- c.author %></b>: <%- c.message %> <small><%= c.created_at %></small></article><% }) %><a href="/">Home</a></body></html>

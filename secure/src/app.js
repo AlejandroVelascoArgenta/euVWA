@@ -1,0 +1,11 @@
+const express=require('express');const path=require('path');const bodyParser=require('body-parser');const cookieParser=require('cookie-parser');const session=require('express-session');const helmet=require('helmet');const rateLimit=require('express-rate-limit');const {init}=require('./db');
+const app=express();init();
+app.set('view engine','ejs');app.set('views',path.join(__dirname,'..','views'));
+app.use(helmet({contentSecurityPolicy:{directives:{defaultSrc:["'self'"],imgSrc:["'self'","data:"],scriptSrc:["'self'"],objectSrc:["'none'"]}}}));
+app.use(bodyParser.urlencoded({extended:true,limit:'20kb'}));app.use(bodyParser.json({limit:'20kb'}));app.use(cookieParser());
+app.use(session({name:'euvwa.sid',secret:process.env.SESSION_SECRET||'replace-in-production',resave:false,saveUninitialized:false,cookie:{httpOnly:true,secure:false,sameSite:'lax'}}));
+app.use(rateLimit({windowMs:15*60*1000,limit:100,standardHeaders:true,legacyHeaders:false}));
+app.use('/uploads',express.static(path.join(__dirname,'..','public','uploads'),{fallthrough:false,dotfiles:'deny'}));
+app.use('/',require('./routes'));
+app.use((err,req,res,next)=>{console.error(err.message);res.status(500).render('error',{message:'Unexpected server error'})});
+if(require.main===module){app.listen(3001,()=>console.log('euVWA secure on http://localhost:3001'))}module.exports=app;

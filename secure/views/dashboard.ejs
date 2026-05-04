@@ -1,0 +1,1 @@
+<!doctype html><html><body><h1>Dashboard - <%= mode %></h1><p>Welcome <%= user.username %> (<%= user.role %>)</p><% if(typeof token !== 'undefined'){ %><p>Short-lived JWT demo: <code><%= token %></code></p><% } %><a href="/logout">Logout</a></body></html>
