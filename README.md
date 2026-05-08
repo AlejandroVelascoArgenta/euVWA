@@ -162,6 +162,91 @@ La explotación de esta vulnerabilidad puede permitir:
 En la versión segura, esta vulnerabilidad ha sido mitigada mediante el uso de consultas parametrizadas (Prepared Statements), evitando que la entrada del usuario sea interpretada como código SQL.
 ```
 
+```
+### 2. Reflected XSS
+
+### Descripción
+
+La vulnerabilidad Reflected Cross-Site Scripting (XSS) permite inyectar código JavaScript malicioso que es reflejado inmediatamente por la aplicación web sin validación ni sanitización adecuada.
+La aplicación vulnerable muestra directamente el contenido introducido por el usuario dentro de la respuesta HTML, permitiendo la ejecución de scripts arbitrarios en el navegador de la víctima.
+
+---
+
+---
+
+### Evidencia de explotación
+
+Introducir el payload malicioso, el navegador ejecuta código JavaScript enviado por el atacante, demostrando que la aplicación no valida correctamente el contenido recibido.
+
+#### Entrada normal
+Como vemos en la captura, inicialmente,  para una entrada cualquiera, como mi nombre, nos devuelve esa misma entrada.
+
+![Reflected XSS Before](docs/images/XSS_before.png)
+
+---
+
+## Payload utilizado
+
+```html
+<script>alert('XSS')</script>
+```
+
+#### Explotación Reflected XSS
+Como vemos en la captura, nos muestra el alert diciendo **_XSS_** despues de ejecutar el Payload.
+
+![Reflected XSS After](docs/images/XSS_After.png)
+
+---
+
+### Impacto
+
+- Ejecución de código JavaScript arbitrario.
+- Robo de cookies o sesiones.
+- Redirección maliciosa de usuarios.
+- Manipulación del contenido de la página.
+- Posibles ataques de phishing.
+
+---
+
+### Mitigación aplicada en la versión segura
+
+La versión segura de la web euVWA Secure implementa sanitización y escape de salida de los datos introducidos por el usuario, evitando que el navegador interprete el contenido como código ejecutable.
+
+Además:
+
+- Se validan los datos recibidos.
+- Se escapan caracteres especiales HTML.
+- Se aplican buenas prácticas de Secure Coding.
+
+---
+
+### Conclusión de la explotación
+
+La vulnerabilidad Reflected XSS ha permitido ejecutar código JavaScript arbitrario en el navegador mediante la inserción de un payload malicioso reflejado por la aplicación web.
+
+El payload utilizado:
+
+```html
+<script>alert('XSS')</script>
+```
+
+ha sido interpretado directamente por el navegador, demostrando que la aplicación vulnerable no sanitiza correctamente el contenido introducido por el usuario.
+
+La explotación de esta vulnerabilidad puede permitir:
+
+- Robo de sesiones.
+- Ejecución de acciones en nombre del usuario.
+- Modificación del contenido visual de la aplicación.
+- Ataques de phishing y redirección maliciosa.
+
+En la versión segura, esta vulnerabilidad ha sido mitigada mediante técnicas de escape de salida y sanitización de contenido.
+
+---
+
+### OWASP Relacionado
+
+- OWASP Top 10 — A03:2021 Injection
+
 ## Estructura profesional
 
 ```text
