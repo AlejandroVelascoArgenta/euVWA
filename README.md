@@ -7,6 +7,24 @@ Aplicación educativa inspirada en DVWA, portada a Node.js + Express. Incluye do
 
 > Uso exclusivo en laboratorio local y con fines académicos.
 
+
+La aplicación implementa 10 vulnerabilidades relacionadas con OWASP Top 10 distribuidas entre diferentes módulos funcionales de la aplicación.
+Esta documentación incluye explicaciones detalladas y capturas de explotación de 8 de las vulnerabilidades implementadas.
+
+<!-- TOC -->
+* [euVWA - Desarrollo UE Vulnerable Web Application](#euvwa---desarrollo-ue-vulnerable-web-application)
+  * [Instalación y ejecución](#instalación-y-ejecución)
+    * [Requisitos](#requisitos)
+    * [Ejecutar versión vulnerable](#ejecutar-versión-vulnerable)
+    * [Ejecutar versión segura](#ejecutar-versión-segura)
+  * [Ramas Git solicitadas](#ramas-git-solicitadas)
+  * [Docker opcional](#docker-opcional)
+  * [Tabla comparativa vulnerable vs segura](#tabla-comparativa-vulnerable-vs-segura)
+  * [Evidencias/capturas sugeridas](#evidenciascapturas-sugeridas)
+  * [Estructura profesional](#estructura-profesional)
+  * [Explicación técnica resumida](#explicación-técnica-resumida)
+  * [Commits significativos recomendados](#commits-significativos-recomendados)
+<!-- TOC -->
 ## Instalación y ejecución
 
 ### Requisitos
@@ -14,6 +32,17 @@ Aplicación educativa inspirada en DVWA, portada a Node.js + Express. Incluye do
 - npm
 - Git
 - Docker opcional
+
+## Despliegue con Docker
+
+El proyecto puede ejecutarse utilizando Docker y Docker Compose, permitiendo desplegar tanto la versión vulnerable como la versión segura en contenedores aislados.Como he hecho personalmente,desplegando el proyecto con docker
+Antes de ejecutar contenedores, asegurarse que Docker Desktop esta abierto en tu ordenador
+### Ejecutar contenedores
+```bash
+docker-compose up -d --build
+```
+Vemos como aparecen los dos contenedores corriendo dentro del proyecto eVWA
+![Docker Deployment](docs/images/docker_deployment.png)
 
 ### Ejecutar versión vulnerable
 ```bash
@@ -32,8 +61,27 @@ npm install
 npm start
 # http://localhost:3001
 ```
-
 Credenciales demo: `admin / ChangeMe_Admin_123!`, `alice / ChangeMe_Alice_123!`.
+
+### Acceso a las aplicaciones
+
+#### Versión vulnerable
+
+```bash
+http://localhost:3000
+```
+
+#### Versión segura
+
+```bash
+http://localhost:3001
+```
+#### Para detener los contenedores
+```bash
+docker-compose down
+```
+
+
 
 ## Ramas Git solicitadas
 
