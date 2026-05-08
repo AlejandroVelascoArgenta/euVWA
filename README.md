@@ -247,6 +247,89 @@ En la versión segura, esta vulnerabilidad ha sido mitigada mediante técnicas d
 
 - OWASP Top 10 — A03:2021 Injection
 
+## 3. Stored XSS
+
+### Descripción
+
+La vulnerabilidad Stored Cross-Site Scripting (Stored XSS) permite almacenar código JavaScript malicioso dentro de la aplicación para que posteriormente sea ejecutado automáticamente en el navegador de otros usuarios.
+
+La aplicación vulnerable almacena contenido proporcionado por el usuario sin aplicar validaciones ni sanitización adecuada.
+
+---
+
+### Payload utilizado
+
+```html
+<b>PRUEBA</b>
+```
+
+---
+
+### Evidencia de explotación
+
+El payload malicioso queda almacenado permanentemente en la aplicación y es ejecutado automáticamente cada vez que la página vulnerable es cargada.
+
+#### Entrada normal
+Para una entrada cualquiera con nombre de autor cualquiera como Alejandro y Hola mundo como texto, nos muestra lo mismo.
+![Stored XSS Before](docs/images/StoredXSS_before.png)
+
+---
+
+#### Explotación Stored XSS
+Como vemos en la captura, al ejecutar el payload malicioso, con un nombre de autor cualquiera como Hacker, y despues de ejcutar el POST, la aplicación interpreta contenido HTML introducido por el usuario, demostrando ausencia de sanitización adecuada sobre el contenido almacenado.
+![Stored XSS After](docs/images/StoredXSS_After.png)
+
+---
+
+### Impacto
+
+- Ejecución persistente de código JavaScript.
+- Robo de sesiones y cookies.
+- Compromiso de múltiples usuarios.
+- Modificación de contenido web.
+- Distribución de malware o phishing.
+
+---
+
+### Mitigación aplicada en la versión segura
+
+La versión segura implementa sanitización estricta del contenido almacenado y escape de salida antes de mostrar información al usuario.
+
+Además:
+
+- Se filtran etiquetas HTML peligrosas.
+- Se validan los datos recibidos.
+- Se aplican políticas seguras de renderizado.
+
+---
+
+### Conclusión de la explotación
+
+La vulnerabilidad Stored XSS ha permitido almacenar contenido HTML persistente dentro de la aplicación, renderizándose posteriormente dentro de la aplicación web.
+Esto demuestra que la aplicación vulnerable no aplica una sanitización adecuada sobre el contenido almacenado introducido por el usuario.
+El payload utilizado:
+
+```html
+<b>PRUEBA</b>
+```
+
+demuestra que la aplicación almacena información sin aplicar controles adecuados de sanitización.
+
+La explotación de esta vulnerabilidad puede permitir:
+
+- Ataques persistentes contra múltiples usuarios.
+- Robo de sesiones.
+- Modificación del contenido mostrado.
+- Distribución de contenido malicioso.
+
+En la versión segura, esta vulnerabilidad ha sido mitigada mediante validación de entrada y sanitización de contenido almacenado.
+
+---
+
+### OWASP Relacionado
+
+- OWASP Top 10 — A03:2021 Injection
+
 ## Estructura profesional
 
 ```text
