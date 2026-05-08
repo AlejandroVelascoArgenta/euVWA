@@ -104,14 +104,6 @@ git commit -m "Keep secure implementation with mitigations"
 
 También puedes mantener ambas carpetas en `main` para corrección local y crear las dos ramas como pide el enunciado.
 
-## Docker opcional
-
-```bash
-docker compose up --build
-```
-
-- Vulnerable: http://localhost:3000
-- Secure: http://localhost:3001
 
 ## Tabla comparativa vulnerable vs segura
 
@@ -128,19 +120,47 @@ docker compose up --build
 | 9 | Path Traversal / descarga insegura | `GET /download?file=` | Intento con `../data/euvwa.db` | `path.basename`, verificación de ruta y existencia |
 | 10 | Broken Access Control | `GET /admin?role=admin` | Acceso manipulando query param | Middleware `adminOnly` basado en sesión real |
 
-## Evidencias/capturas sugeridas
+## Evidencias/capturas de vulnerabilidades
 
-Incluye capturas en `docs/screenshots/` o un vídeo corto mostrando:
+## 1. SQL Injection
+Vulnerabilidad 1: SQL Injection
 
-1. SQLi login bypass.
-2. SQLi search mostrando usuarios.
-3. XSS reflejado con alerta.
-4. XSS almacenado en comentarios.
-5. Command Injection ejecutando `whoami`.
-6. File upload aceptando archivo no permitido en vulnerable.
-7. `/api/users` exponiendo contraseñas/tokens.
-8. `/admin?role=admin` saltando autorización.
-9. Error con stack trace en vulnerable.
+Entramos en: SQLi Search dentro de la web vulnerable 
+`http:localhost:3000
+`
+
+Ejecutamos "a" en el buscador y damos a "Search"
+Como vemos en la captura, observamos que la búsqueda normal devuelve únicamente usuarios coincidentes con el parámetro introducido.
+![SQL Injection Before](docs/images/sql_injection_before.png)
+#### _Pasamos a la explotación:_
+
+Usamos el payload: **`admin' OR '1'='1`** 
+
+Al introducir un payload SQL malicioso, la lógica de la consulta es alterada devolviendo resultados manipulados.
+Como vemos en la captura 
+![SQL Injection After](docs/images/sql_injection_after.png)
+### Descripción y Conclusión de la explotación
+
+La vulnerabilidad de SQL Injection ha permitido modificar la lógica interna de la consulta SQL mediante la inserción de un payload malicioso en el campo de búsqueda.
+
+El payload utilizado:
+
+```sql
+admin' OR '1'='1
+``` 
+ha provocado que la condición de la consulta sea siempre verdadera, permitiendo alterar el comportamiento esperado de la aplicación y obteniendo resultados manipulados.
+
+Esto demuestra que la aplicación vulnerable no valida ni sanitiza correctamente la entrada del usuario antes de construir la consulta SQL, interpretando el input como parte del código ejecutable.
+
+La explotación de esta vulnerabilidad puede permitir:
+
+- Acceso no autorizado a información sensible.
+- Bypass de autenticación.
+- Enumeración de usuarios.
+- Extracción o modificación de datos de la base de datos.
+
+En la versión segura, esta vulnerabilidad ha sido mitigada mediante el uso de consultas parametrizadas (Prepared Statements), evitando que la entrada del usuario sea interpretada como código SQL.
+```
 
 ## Estructura profesional
 
