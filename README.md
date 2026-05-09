@@ -9,7 +9,7 @@ Aplicación educativa inspirada en DVWA, portada a Node.js + Express. Incluye do
 
 
 La aplicación implementa 10 vulnerabilidades relacionadas con OWASP Top 10 distribuidas entre diferentes módulos funcionales de la aplicación.
-Esta documentación incluye explicaciones detalladas y capturas de explotación de 8 de las vulnerabilidades implementadas.
+Esta documentación incluye explicaciones detalladas y capturas de explotación de 8 de las 10 vulnerabilidades implementadas.
 
 <!-- TOC -->
 * [euVWA - Desarrollo UE Vulnerable Web Application](#euvwa---desarrollo-ue-vulnerable-web-application)
@@ -82,44 +82,21 @@ docker-compose down
 ```
 
 
-
-## Ramas Git solicitadas
-
-Si quieres entregar como ramas reales:
-
-```bash
-git init
-git add README.md vulnerable secure docker-compose.yml
-git commit -m "Initial euVWA project with vulnerable and secure versions"
-
-git checkout -b main-vulnerable
-git rm -r secure
-git commit -m "Keep intentionally vulnerable implementation"
-
-git checkout main
-git checkout -b main-secure
-git rm -r vulnerable
-git commit -m "Keep secure implementation with mitigations"
-```
-
-También puedes mantener ambas carpetas en `main` para corrección local y crear las dos ramas como pide el enunciado.
-
-
+## Tabla comparativa vulnerable vs segura
 ## Tabla comparativa vulnerable vs segura
 
-| # | Vulnerabilidad OWASP | Ruta vulnerable | Explotación demo | Corrección en `secure` |
+| # | Vulnerabilidad OWASP | Funcionalidad vulnerable | Explotación demostrada en la versión vulnerable | Mitigación implementada en `secure` |
 |---|---|---|---|---|
-| 1 | SQL Injection | `POST /login`, `GET /search` | Login con `admin' OR '1'='1' --` o búsqueda con `' OR 1=1 --` | Consultas parametrizadas con `?`; no concatenación SQL |
-| 2 | XSS reflejado | `GET /xss-reflected?name=` | `<script>alert(1)</script>` | Escape con EJS `<%= %>` y validación/escape de entrada |
-| 3 | XSS almacenado | `POST /comments` | Guardar `<img src=x onerror=alert(1)>` | Usuario autenticado, escape de entrada y renderizado seguro |
-| 4 | Command Injection | `POST /ping` | `127.0.0.1; whoami` | `execFile()` con argumentos separados y whitelist de host |
-| 5 | Insecure File Upload | `POST /upload` | Subida de HTML/JS o payload no validado | Filtro MIME, límite de tamaño, nombres normalizados |
-| 6 | Broken Authentication | `POST /login` | Passwords en claro, sesión débil, cookie no httpOnly | `bcrypt`, `session.regenerate`, cookie `httpOnly` y `sameSite` |
-| 7 | Sensitive Data Exposure | `GET /api/users` | Devuelve passwords/tokens de todos los usuarios sin login | Requiere auth+admin y solo devuelve campos mínimos |
-| 8 | Security Misconfiguration | App global | Stack traces, secreto hardcoded, sin cabeceras | `helmet`, rate limit, error genérico, configuración más restrictiva |
-| 9 | Path Traversal / descarga insegura | `GET /download?file=` | Intento con `../data/euvwa.db` | `path.basename`, verificación de ruta y existencia |
-| 10 | Broken Access Control | `GET /admin?role=admin` | Acceso manipulando query param | Middleware `adminOnly` basado en sesión real |
-
+| 1 | SQL Injection | `SQLi Search` | Manipulación de consultas SQL mediante el payload `admin' OR '1'='1`, alterando la lógica de búsqueda y permitiendo acceso a resultados no previstos. | Implementación de consultas parametrizadas (Prepared Statements) evitando concatenación directa de entradas del usuario en consultas SQL. |
+| 2 | Reflected XSS | `Reflected XSS` | Inyección de código JavaScript reflejado utilizando `<script>alert('XSS')</script>`, ejecutándose directamente en el navegador de la víctima. | Escape y sanitización de entrada/salida mediante renderizado seguro y validación de contenido recibido. |
+| 3 | Stored XSS | `Stored XSS` | Inserción persistente de contenido HTML malicioso almacenado dentro de la aplicación y renderizado posteriormente a otros usuarios. | Filtrado y sanitización de contenido persistente antes de almacenarlo y renderizado seguro de comentarios. |
+| 4 | Command Injection | `Command Injection` | Ejecución de comandos arbitrarios del sistema utilizando `127.0.0.1 && whoami`, obteniendo ejecución de comandos sobre el servidor. | Validación estricta de entradas y eliminación de ejecución insegura de comandos del sistema operativo. |
+| 5 | Insecure File Upload | `Upload` | Subida de un archivo potencialmente peligroso (`shell.php`) demostrando ausencia de validación de extensiones y tipos de archivo. | Validación MIME, restricción de extensiones permitidas y control seguro de almacenamiento de archivos. |
+| 6 | Broken Authentication | `Login` | Acceso al panel vulnerable mediante credenciales débiles (`admin/admin123`) y ausencia de políticas robustas de autenticación. | Contraseñas almacenadas de forma segura mediante hash, mejora de políticas de autenticación y protección de sesiones. |
+| 7 | Sensitive Data Exposure | `API Users` | Exposición directa de usuarios, contraseñas, tokens y correos electrónicos desde un endpoint accesible sin protección adecuada. | Restricción de acceso a endpoints sensibles y limitación de información expuesta por la API. |
+| 8 | Security Misconfiguration | `API Users` | Endpoint interno accesible públicamente sin autenticación debido a configuraciones inseguras y ausencia de controles adecuados. | Hardening de configuración, protección de endpoints internos y aplicación de controles de acceso. |
+| 9 | Broken Access Control | `Admin` | Intento de acceso directo a funcionalidades administrativas y recursos restringidos mediante manipulación de rutas y navegación manual. | Implementación de middleware de autorización y validación de privilegios basada en sesión autenticada. |
+| 10 | Weak Session Management | Gestión de sesiones | Configuración insegura de sesiones y cookies permitiendo riesgos asociados a secuestro o reutilización de sesión. | Uso de cookies seguras (`httpOnly`, `sameSite`), regeneración de sesión y endurecimiento de configuración de autenticación. |
 ## Evidencias/capturas de vulnerabilidades
 
 ## 1. SQL Injection
@@ -769,45 +746,48 @@ En la versión segura, esta vulnerabilidad ha sido mitigada mediante hardening d
 
 - OWASP Top 10 — A05:2021 Security Misconfiguration
 
-```text
 euVWA/
 ├── README.md
+├── .gitignore
 ├── docker-compose.yml
+├── shell.php
+├── docs/
+│   └── images/
 ├── vulnerable/
-│   ├── package.json
+│   ├── data/
+│   ├── node_modules/
+│   ├── public/
 │   ├── src/
-│   │   ├── app.js
-│   │   ├── db.js
-│   │   └── routes.js
+│   ├── tests/
 │   ├── views/
-│   ├── public/uploads/
-│   └── data/
+│   ├── package.json
+│   └── package-lock.json
 └── secure/
-    ├── package.json
     ├── src/
     │   ├── app.js
     │   ├── db.js
     │   └── routes.js
     ├── views/
-    ├── public/uploads/
+    ├── package.json
     └── data/
-```
-
 ## Explicación técnica resumida
 
-La versión vulnerable reproduce fallos típicos de aplicaciones web: concatenación directa en SQL, renderizado HTML no escapado, ejecución de comandos con cadenas construidas por el usuario, subida de archivos sin validación, autenticación con contraseñas en claro, exposición de datos sensibles y controles de acceso basados en parámetros manipulables.
+La versión vulnerable reproduce fallos típicos presentes en aplicaciones web inseguras, incluyendo concatenación directa de consultas SQL, renderizado HTML sin escape de contenido, ejecución insegura de comandos del sistema, subida de archivos sin validación adecuada, autenticación basada en credenciales débiles, exposición de información sensible y configuraciones inseguras de endpoints y controles de acceso.
 
-La versión segura aplica defensa en profundidad: consultas parametrizadas, `bcrypt`, regeneración de sesión tras login, cookies más seguras, cabeceras con `helmet`, rate limiting, validación de entradas, uso de `execFile`, filtrado de ficheros, reducción de datos expuestos, control de roles en middleware y manejo de errores sin filtrar detalles internos.
+Estas vulnerabilidades permiten demostrar distintos escenarios de explotación relacionados con el OWASP Top 10, facilitando la comprensión práctica de riesgos habituales en aplicaciones web modernas.
 
-## Commits significativos recomendados
+La versión segura aplica un enfoque de defensa en profundidad mediante la implementación de consultas parametrizadas, sanitización de entradas y salidas, hash seguro de contraseñas con `bcrypt`, regeneración de sesiones tras autenticación, configuración segura de cookies (`httpOnly`, `sameSite`), protección mediante `helmet`, limitación de peticiones (`rate limiting`), validación estricta de archivos subidos, reducción de información expuesta por la API, control de acceso basado en roles y manejo seguro de errores sin filtrar información interna del sistema.
+## Historial de commits significativos
 
 ```bash
-git commit -m "Create Express application skeleton"
-git commit -m "Implement intentionally vulnerable SQLi and XSS labs"
-git commit -m "Add command injection and insecure upload labs"
-git commit -m "Add broken auth, data exposure and access control labs"
-git commit -m "Implement secure SQL queries and output encoding"
-git commit -m "Add secure authentication and authorization middleware"
-git commit -m "Harden file upload, command execution and app security headers"
-git commit -m "Document exploitation steps and secure mitigations"
+git commit -m "Initialize euVWA project repository"
+git commit -m "Configure Docker environment and project structure"
+git commit -m "Create initial vulnerable and secure application branches"
+git commit -m "Implement vulnerable SQL Injection and XSS functionalities"
+git commit -m "Add vulnerable command injection and insecure file upload modules"
+git commit -m "Implement broken authentication and sensitive data exposure scenarios"
+git commit -m "Add secure implementations using prepared statements and sanitization"
+git commit -m "Implement secure authentication, session management and access control"
+git commit -m "Apply secure configuration hardening and API protection measures"
+git commit -m "Document OWASP vulnerability exploitation and applied mitigations"
 ```
