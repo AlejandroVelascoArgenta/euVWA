@@ -416,7 +416,102 @@ En la versión segura, esta vulnerabilidad ha sido mitigada mediante validación
 
 - OWASP Top 10 — A03:2021 Injection
 
+## 5. Insecure File Upload
 
+### Descripción
+
+La vulnerabilidad Insecure File Upload permite subir archivos potencialmente peligrosos al servidor sin validación adecuada del tipo o contenido del archivo.
+
+La aplicación vulnerable acepta archivos proporcionados por el usuario sin aplicar restricciones suficientes.
+
+---
+
+### Payload utilizado
+
+```text
+shell.php
+```
+
+---
+
+### Evidencia de explotación
+
+La aplicación permite subir archivos potencialmente ejecutables o maliciosos al servidor.
+
+#### Subida normal
+Para una ejecucion normal, subimos cualquier imagen. En mi caso, he seleccionado una captura de pantalla cualquiera y como se muestra en la captura realizada inferior, se efectua la subida correctamente. La aplicación genera identificadores únicos para los archivos subidos, almacenándolos posteriormente en el servidor, dandonos la opcion de descargarlos ("Download")
+
+![File Upload Before](docs/images/fileupload_before.png)
+
+---
+
+#### Explotación Insecure File Upload
+Antes de ejecutar el payload malicioso, generamos un archivo PHP potencialmente ejecutable utilizando el siguiente comando en la terminal:
+
+```bash
+echo '<?php echo "Hacked"; ?>' > shell.php
+```
+
+El archivo generado:
+
+```text
+shell.php
+```
+contiene código PHP simple que demuestra la posibilidad de subida de archivos potencialmente peligrosos al servidor.
+Una vez creado, ejecutamos el payload dentro de la web, subiendo el archivo creado.
+Como se ve en la captura, la web aceptó el archivo "shell.php", lo almacenó y lo listó como archivo válido.
+![File Upload After](docs/images/fileupload_after.png)
+
+---
+
+### Impacto
+
+- Ejecución remota de código.
+- Subida de malware.
+- Acceso no autorizado al servidor.
+- Compromiso completo del sistema.
+- Distribución de archivos maliciosos.
+
+---
+
+### Mitigación aplicada en la versión segura
+
+La versión segura valida estrictamente el tipo MIME, extensión y contenido de los archivos subidos.
+
+Además:
+
+- Se restringen extensiones peligrosas.
+- Se almacenan archivos fuera del directorio público.
+- Se renombran automáticamente los archivos subidos.
+
+---
+
+### Conclusión de la explotación
+
+La vulnerabilidad Insecure File Upload ha permitido subir archivos potencialmente peligrosos al servidor debido a la ausencia de controles adecuados sobre los archivos recibidos.
+
+El payload utilizado:
+
+```text
+shell.php
+```
+
+demuestra que la aplicación vulnerable acepta archivos ejecutables sin validación suficiente.
+
+La explotación de esta vulnerabilidad puede permitir:
+
+- Ejecución remota de código.
+- Compromiso del servidor.
+- Distribución de malware.
+- Acceso no autorizado a recursos internos.
+
+En la versión segura que he realizado de la web euVWA, esta vulnerabilidad ha sido mitigada mediante validación estricta de archivos y control seguro de almacenamiento.
+
+---
+
+### OWASP Relacionado
+
+- OWASP Top 10 — A05:2021 Security Misconfiguration
 
 
 
