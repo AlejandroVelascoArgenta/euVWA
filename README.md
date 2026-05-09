@@ -332,6 +332,98 @@ En la versión segura, esta vulnerabilidad ha sido mitigada mediante validación
 
 ## Estructura profesional
 
+## 4. Command Injection
+
+### Descripción
+
+La vulnerabilidad Command Injection permite ejecutar comandos del sistema operativo mediante la manipulación de parámetros introducidos por el usuario.
+
+La aplicación vulnerable concatena directamente el input recibido dentro de comandos ejecutados por el servidor.
+
+---
+
+### Payload utilizado
+
+```bash
+127.0.0.1 && whoami
+```
+
+---
+
+### Evidencia de explotación
+
+Al introducir el payload malicioso, la aplicación ejecuta comandos adicionales en el sistema operativo del servidor.
+
+#### Entrada normal
+Ejecutamos una entrada cualquiera, como puede ser la ip: 127.0.0.1, vemos en la captura como hace el ping normal 
+![Command Injection Before](docs/images/command_injection_before.png)
+
+---
+
+#### Explotación Command Injection
+Para la explotación, usamos el payload malicioso. Efectua el ping y se muestra la aparición del usuario "root" al final del ping, lo que demuestra que el servidor ejecutó comandos arbitrarios enviados por el usuario.
+
+![Command Injection After](docs/images/command_injection_after.png)
+
+---
+
+### Impacto
+
+- Ejecución remota de comandos.
+- Acceso no autorizado al sistema.
+- Escalada de privilegios.
+- Lectura o modificación de archivos.
+- Compromiso total del servidor.
+
+---
+
+### Mitigación aplicada en la versión segura
+
+La versión segura valida estrictamente los parámetros recibidos y evita concatenar directamente input del usuario dentro de comandos del sistema.
+
+Además:
+
+- Se restringen caracteres peligrosos.
+- Se utilizan listas blancas de valores válidos.
+- Se minimiza el uso de comandos del sistema.
+
+---
+
+### Conclusión de la explotación
+
+La vulnerabilidad Command Injection ha permitido ejecutar comandos arbitrarios del sistema operativo mediante la manipulación de parámetros enviados por el usuario.
+
+El payload utilizado:
+
+```bash
+127.0.0.1 && whoami
+```
+
+demuestra que la aplicación vulnerable concatena directamente la entrada del usuario dentro de comandos ejecutados por el servidor.
+
+La explotación de esta vulnerabilidad puede permitir:
+
+- Control remoto del servidor.
+- Ejecución arbitraria de comandos.
+- Acceso a información sensible.
+- Compromiso completo de la infraestructura.
+
+En la versión segura, esta vulnerabilidad ha sido mitigada mediante validación estricta de entrada y eliminación de ejecución insegura de comandos.
+
+---
+
+### OWASP Relacionado
+
+- OWASP Top 10 — A03:2021 Injection
+
+
+
+
+
+
+
+
+
 ```text
 euVWA/
 ├── README.md
