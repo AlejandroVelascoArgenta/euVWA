@@ -790,4 +790,7 @@ git commit -m "Add secure implementations using prepared statements and sanitiza
 git commit -m "Implement secure authentication, session management and access control"
 git commit -m "Apply secure configuration hardening and API protection measures"
 git commit -m "Document OWASP vulnerability exploitation and applied mitigations"
+git commit -m "Finalize euVWA project documentation"
 ```
+
+
