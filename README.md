@@ -682,7 +682,92 @@ En la versión segura, esta vulnerabilidad ha sido mitigada mediante control de 
 
 - OWASP Top 10 — A02:2021 Cryptographic Failures
 
+## 8. Security Misconfiguration
 
+### Descripción
+
+La vulnerabilidad Security Misconfiguration permite que funcionalidades, recursos o endpoints internos queden expuestos debido a configuraciones inseguras y ausencia de controles adecuados de seguridad.
+
+La aplicación vulnerable mantiene un endpoint API accesible públicamente sin autenticación ni restricciones de acceso, permitiendo consultar información interna de la aplicación.
+
+---
+
+### Payload utilizado
+
+```text
+/api/users
+```
+
+---
+
+### Evidencia de explotación
+
+La aplicación permite acceder directamente a un endpoint interno sin autenticación, exponiendo recursos sensibles debido a una configuración insegura de la API.
+
+#### Acceso normal
+Accedemos a la aplicación vulnerable desde la página principal.
+
+![Security Misconfiguration Before](docs/images/security_misconfiguration_before.png)
+
+---
+
+#### Explotación Security Misconfiguration
+
+Al acceder directamente al endpoint `/api/users`, la aplicación devuelve información interna sin aplicar controles adecuados de autenticación ni autorización, demostrando una configuración insegura del sistema.
+
+![Security Misconfiguration After](docs/images/security_misconfiguration_after.png)
+
+---
+
+### Impacto
+
+- Exposición de endpoints internos.
+- Ausencia de controles de acceso.
+- Incremento de superficie de ataque.
+- Enumeración de recursos y usuarios internos.
+- Posibilidad de explotación de otros vectores de ataque.
+
+---
+
+### Mitigación aplicada en la versión segura
+
+La versión segura restringe el acceso a endpoints internos y aplica controles adecuados de autenticación y autorización.
+
+Además:
+
+- Se protegen endpoints sensibles.
+- Se limitan accesos públicos innecesarios.
+- Se aplican configuraciones seguras por defecto.
+- Se reduce la exposición de recursos internos.
+
+---
+
+### Conclusión de la explotación
+
+La vulnerabilidad Security Misconfiguration ha permitido acceder a un endpoint interno accesible públicamente debido a configuraciones inseguras presentes en la aplicación vulnerable.
+
+El payload utilizado:
+
+```text
+/api/users
+```
+
+demuestra la ausencia de controles adecuados sobre recursos internos expuestos por la API.
+
+La explotación de esta vulnerabilidad puede permitir:
+
+- Enumeración de recursos internos.
+- Identificación de endpoints sensibles.
+- Incremento de superficie de ataque.
+- Preparación de ataques posteriores.
+
+En la versión segura, esta vulnerabilidad ha sido mitigada mediante hardening de configuración y protección adecuada de endpoints internos.
+
+---
+
+### OWASP Relacionado
+
+- OWASP Top 10 — A05:2021 Security Misconfiguration
 
 ```text
 euVWA/
