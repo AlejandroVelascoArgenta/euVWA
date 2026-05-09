@@ -599,7 +599,88 @@ En la versión segura de la web, esta vulnerabilidad ha sido mitigada mediante a
 
 - OWASP Top 10 — A07:2021 Identification and Authentication Failures
 
+## 7. Sensitive Data Exposure
 
+### Descripción
+
+La vulnerabilidad Sensitive Data Exposure permite acceder a información sensible debido a controles insuficientes de protección y exposición indebida de datos.
+
+La aplicación vulnerable expone información sensible de usuarios y datos internos sin aplicar controles adecuados.
+
+---
+
+### Payload utilizado
+
+```text
+/api/users
+```
+
+---
+
+### Evidencia de explotación
+
+La aplicación devuelve información sensible sin autenticación o protección suficiente.
+
+#### Acceso normal
+Entramos en API Users dentro de la web.
+![Sensitive Data Exposure Before](docs/images/ApiUsers_before.png)
+
+---
+
+#### Exposición de información sensible
+Despues de clicar en Api Users vemos como la aplicación expone credenciales, tokens y datos sensibles directamente desde un endpoint accesible sin autenticación, demostrando una gestión insegura de la información sensible.
+
+![Sensitive Data Exposure After](docs/images/ApiUsersAfter.png)
+
+---
+
+### Impacto
+
+- Exposición de datos personales.
+- Enumeración de usuarios.
+- Fuga de información sensible.
+- Riesgo de ataques posteriores.
+
+---
+
+### Mitigación aplicada en la versión segura
+
+En la versión segura restringe el acceso a información sensible y aplica controles de autenticación y autorización.
+
+Además:
+
+- Se limita la información expuesta.
+- Se controlan permisos de acceso.
+- Se protegen endpoints sensibles.
+
+---
+
+### Conclusión de la explotación
+
+La vulnerabilidad Sensitive Data Exposure ha permitido acceder a información sensible debido a la falta de controles adecuados sobre los datos expuestos por la aplicación.
+
+El payload utilizado:
+
+```text
+/api/users
+```
+
+demuestra que la aplicación vulnerable expone información interna sin restricciones suficientes.
+
+La explotación de esta vulnerabilidad puede permitir:
+
+- Enumeración de usuarios.
+- Obtención de información sensible.
+- Preparación de ataques posteriores.
+- Compromiso de privacidad de usuarios.
+
+En la versión segura, esta vulnerabilidad ha sido mitigada mediante control de acceso y limitación de exposición de información.
+
+---
+
+### OWASP Relacionado
+
+- OWASP Top 10 — A02:2021 Cryptographic Failures
 
 
 
