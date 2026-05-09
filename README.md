@@ -513,7 +513,91 @@ En la versión segura que he realizado de la web euVWA, esta vulnerabilidad ha s
 
 - OWASP Top 10 — A05:2021 Security Misconfiguration
 
+## 6. Broken Authentication
 
+### Descripción
+
+La vulnerabilidad Broken Authentication permite debilidades en el proceso de autenticación que facilitan accesos no autorizados mediante credenciales inseguras o gestión incorrecta de sesiones.
+
+La aplicación vulnerable utiliza credenciales débiles y controles insuficientes de autenticación.
+
+---
+
+### Payload utilizado
+
+```text
+admin / admin123
+```
+
+---
+
+### Evidencia de explotación
+
+La aplicación permite autenticarse utilizando credenciales débiles o fácilmente predecibles.
+
+#### Login normal
+Si intentamos hacer un login cualquiera,como alejandro y alexvelasco123, vemos como no conseguimos acceder, pues es inválido.
+
+![Broken Authentication Before](docs/images/brokenauth_before.png)
+
+---
+
+#### Explotación Broken Authentication
+Para la explotación, usamos admin y admin123. Valida usuario y contraseña y nos permite entrar, evidenciando credenciales débiles, una autenticación insegura y la ausencia de políticas robustas.
+Incluso, como vemos en la primera captura, el navegador detectó automáticamente que la contraseña utilizada había aparecido en brechas de datos conocidas, evidenciando el uso de credenciales débiles e inseguras.
+
+![Broken Authentication After](docs/images/brokenauth_after.png)
+![Broken Authentication After](docs/images/brokenauth2_after.png)
+---
+
+### Impacto
+
+- Acceso no autorizado a cuentas.
+- Compromiso de sesiones.
+- Escalada de privilegios.
+- Robo de información sensible.
+
+---
+
+### Mitigación aplicada en la versión segura
+
+La versión segura implementa políticas robustas de autenticación y protección de sesiones.
+
+Además:
+
+- Se utilizan contraseñas seguras.
+- Se aplican hashes de contraseñas.
+- Se implementa rate limiting.
+- Se mejoran controles de sesión.
+
+---
+
+### Conclusión de la explotación
+
+La vulnerabilidad Broken Authentication ha permitido acceder a cuentas utilizando credenciales débiles y mecanismos inseguros de autenticación.
+
+El payload utilizado:
+
+```text
+admin / admin123
+```
+
+demuestra que la aplicación vulnerable no aplica políticas adecuadas de protección de credenciales.
+
+La explotación de esta vulnerabilidad puede permitir:
+
+- Acceso no autorizado a cuentas.
+- Robo de sesiones.
+- Escalada de privilegios.
+- Compromiso de información sensible.
+
+En la versión segura de la web, esta vulnerabilidad ha sido mitigada mediante autenticación robusta y protección adecuada de sesiones.
+
+---
+
+### OWASP Relacionado
+
+- OWASP Top 10 — A07:2021 Identification and Authentication Failures
 
 
 
