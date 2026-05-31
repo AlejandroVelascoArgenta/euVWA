@@ -1035,3 +1035,20 @@ Durante el análisis se identificaron diversas debilidades de seguridad, entre e
 - Configuraciones inseguras detectables durante la ejecución.
 
 El escaneo genera automáticamente un informe de resultados y permite incorporar controles de seguridad dinámicos dentro del ciclo DevSecOps.
+
+
+## Imagen Docker publicada
+
+La imagen Docker endurecida de la versión segura de euVWA ha sido publicada en GitHub Container Registry:
+
+```text
+ghcr.io/alejandrovelascoargenta/euvwa-secure:latest
+```
+
+La imagen incorpora las siguientes medidas de hardening:
+
+- Usuario no-root.
+- Imagen base mínima Node.js Alpine.
+- Dependencias de producción únicamente.
+- Reducción de superficie de ataque.
+- Escaneo de vulnerabilidades mediante Trivy.
