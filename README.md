@@ -1052,3 +1052,57 @@ La imagen incorpora las siguientes medidas de hardening:
 - Dependencias de producción únicamente.
 - Reducción de superficie de ataque.
 - Escaneo de vulnerabilidades mediante Trivy.
+
+# Informe Ejecutivo de Seguridad
+
+## Resumen Ejecutivo
+
+Durante esta actividad se ha diseñado e implementado un pipeline DevSecOps completo para la aplicación euVWA utilizando GitHub Actions como plataforma de integración continua.
+
+El objetivo principal ha sido incorporar controles de seguridad automatizados a lo largo de todo el ciclo de vida del desarrollo, siguiendo el enfoque Shift Left Security. Para ello se han integrado herramientas de análisis estático, análisis dinámico, generación de SBOM, análisis de dependencias y escaneo de imágenes Docker.
+
+## Controles de Seguridad Implementados
+
+### Análisis SAST
+
+Se utilizó Semgrep para realizar análisis estático de seguridad sobre el código fuente. La herramienta permitió detectar vulnerabilidades de tipo Command Injection en la versión vulnerable de la aplicación.
+
+### Análisis DAST
+
+Se integró OWASP ZAP Baseline Scan para realizar análisis dinámico de seguridad sobre la aplicación en ejecución. El escaneo permitió identificar debilidades relacionadas con la gestión de sesiones, cabeceras HTTP de seguridad y protección frente a ataques web.
+
+### Gestión de Dependencias
+
+Se utilizó Trivy para analizar las dependencias del proyecto e identificar vulnerabilidades conocidas presentes en componentes de terceros.
+
+### Generación de SBOM
+
+Se generó automáticamente un Software Bill of Materials (SBOM) en formato CycloneDX, proporcionando visibilidad completa sobre los componentes y dependencias utilizados por la aplicación.
+
+### Seguridad de Contenedores
+
+Se construyó una imagen Docker endurecida aplicando medidas de hardening como el uso de usuario no privilegiado (non-root), imagen base mínima Node.js Alpine y reducción de dependencias innecesarias.
+
+Posteriormente, la imagen fue analizada mediante Trivy para detectar posibles vulnerabilidades.
+
+## Resultados Obtenidos
+
+- La rama vulnerable provoca el fallo del pipeline al detectarse vulnerabilidades de seguridad.
+- La rama segura supera correctamente todos los controles automatizados.
+- Se consiguió automatizar la detección temprana de vulnerabilidades dentro del proceso de desarrollo.
+- Se generaron artefactos de seguridad reutilizables, incluyendo el SBOM y los informes de análisis.
+- La imagen Docker endurecida fue publicada en GitHub Container Registry (GHCR).
+
+## Beneficios de la Solución Implementada
+
+- Detección temprana de vulnerabilidades mediante análisis SAST y DAST.
+- Mayor visibilidad sobre dependencias y componentes de software gracias al SBOM.
+- Reducción del riesgo asociado a imágenes Docker inseguras.
+- Automatización completa de los controles de seguridad dentro del pipeline CI/CD.
+- Aplicación práctica de la metodología DevSecOps y del enfoque Shift Left Security.
+
+## Conclusiones
+
+La implementación realizada demuestra la eficacia de un enfoque DevSecOps para integrar la seguridad dentro del ciclo de vida del software. La combinación de SAST, DAST, análisis de dependencias, generación de SBOM y escaneo de contenedores permite detectar vulnerabilidades de forma temprana y reducir significativamente el riesgo de despliegue de software inseguro.
+
+El pipeline desarrollado proporciona una base sólida para la adopción de prácticas DevSecOps en entornos reales de desarrollo y despliegue continuo. La automatización de los controles de seguridad permite mejorar la calidad del software, reducir errores humanos y reforzar la seguridad de las aplicaciones desde las fases iniciales de desarrollo.
