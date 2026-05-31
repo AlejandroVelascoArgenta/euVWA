@@ -746,6 +746,8 @@ En la versión segura, esta vulnerabilidad ha sido mitigada mediante hardening d
 
 - OWASP Top 10 — A05:2021 Security Misconfiguration
 
+### Estructura del proyecto
+```text
 euVWA/
 ├── README.md
 ├── .gitignore
@@ -770,6 +772,8 @@ euVWA/
     ├── views/
     ├── package.json
     └── data/
+```
+
 ## Explicación técnica resumida
 
 La versión vulnerable reproduce fallos típicos presentes en aplicaciones web inseguras, incluyendo concatenación directa de consultas SQL, renderizado HTML sin escape de contenido, ejecución insegura de comandos del sistema, subida de archivos sin validación adecuada, autenticación basada en credenciales débiles, exposición de información sensible y configuraciones inseguras de endpoints y controles de acceso.
