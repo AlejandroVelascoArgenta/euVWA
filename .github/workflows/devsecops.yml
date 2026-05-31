@@ -6,6 +6,7 @@ on:
       - actividad-2-devsecops
       - main-secure
       - main-vulnerable
+
   pull_request:
     branches:
       - actividad-2-devsecops
@@ -29,3 +30,17 @@ jobs:
           test -f README.md
           test -f docker-compose.yml
           echo "Repository structure is valid."
+
+  sast-semgrep:
+    name: SAST Analysis - Semgrep
+    runs-on: ubuntu-latest
+    needs: basic-validation
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Run Semgrep security audit
+        uses: semgrep/semgrep-action@v1
+        with:
+          config: p/security-audit
