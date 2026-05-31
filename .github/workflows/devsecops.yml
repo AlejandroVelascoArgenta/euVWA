@@ -84,7 +84,6 @@ jobs:
           name: sbom-cyclonedx
           path: sbom-cyclonedx.json
 
-
   container-scan:
     name: Container Scan - Trivy
     runs-on: ubuntu-latest
@@ -103,3 +102,30 @@ jobs:
         with:
           image-ref: euvwa-secure:latest
           format: table
+
+  dast-zap:
+    name: DAST Analysis - OWASP ZAP
+    runs-on: ubuntu-latest
+    needs: basic-validation
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Start vulnerable application
+        run: |
+          docker compose up -d euvwa-vulnerable
+          sleep 30
+
+      - name: OWASP ZAP Baseline Scan
+        uses: zaproxy/action-baseline@v0.14.0
+        with:
+          target: 'http://localhost:3000'
+          fail_action: false
+          allow_issue_writing: false
+          artifact_name: zap-baseline-report
+
+      - name: Stop containers
+        if: always()
+        run: |
+          docker compose down
