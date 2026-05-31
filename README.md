@@ -964,3 +964,56 @@ El artefacto generado puede descargarse desde GitHub Actions y contiene el inven
 - Facilita auditorías de seguridad.
 - Mejora la gestión de vulnerabilidades.
 - Ayuda al cumplimiento de buenas prácticas DevSecOps y Supply Chain Security.
+#### Generación de SBOM (Software Bill of Materials)
+
+![Generación de SBOM](docs/images/sbom_generation_job.png)
+
+Se integró CycloneDX en el pipeline DevSecOps para generar automáticamente un Software Bill of Materials (SBOM). Este artefacto proporciona visibilidad completa sobre las dependencias utilizadas por la aplicación y ayuda a mejorar la seguridad de la cadena de suministro del software.
+
+El SBOM generado permite:
+
+- Identificar dependencias de terceros utilizadas por la aplicación.
+- Detectar componentes potencialmente vulnerables.
+- Mejorar los procesos de auditoría y cumplimiento normativo.
+- Facilitar la gestión y seguimiento de vulnerabilidades.
+
+#### Escaneo de Seguridad de Contenedores con Trivy
+
+![Escaneo de Contenedores](docs/images/container_scan_trivy.png)
+
+Se generó una imagen Docker endurecida (hardened) a partir de la versión segura de euVWA y posteriormente se analizó mediante Trivy para detectar vulnerabilidades.
+
+Medidas de hardening aplicadas:
+
+- Uso de una imagen base mínima Node.js Alpine.
+- Ejecución de la aplicación con un usuario no privilegiado (non-root).
+- Reducción de la superficie de ataque.
+- Instalación únicamente de dependencias necesarias para producción.
+- Ausencia de secretos o credenciales embebidos en la imagen.
+
+El análisis realizado por Trivy confirmó que no se introdujeron vulnerabilidades críticas durante el proceso de construcción de la imagen Docker.
+
+#### Detección de Vulnerabilidades mediante Semgrep
+
+![Hallazgo de Semgrep](docs/images/semgrep_command_injection_findings3.png)
+
+Semgrep fue integrado como herramienta SAST (Static Application Security Testing) para analizar automáticamente el código fuente en busca de vulnerabilidades de seguridad.
+
+Durante la ejecución del pipeline se detectó una vulnerabilidad de tipo **Command Injection** en la rama vulnerable de la aplicación. La herramienta identificó el uso inseguro de la función `child_process.exec()`, capaz de ejecutar comandos del sistema utilizando datos proporcionados por el usuario sin la validación adecuada.
+
+Esta detección demuestra la capacidad del pipeline para identificar vulnerabilidades críticas antes de que el código llegue a producción, aplicando el enfoque Shift Left de DevSecOps.
+
+#### Ejecución Completa del Pipeline DevSecOps
+
+![Ejecución del Pipeline](docs/images/devsecops_pipeline_complete.png)
+
+El pipeline DevSecOps final integra los siguientes controles de seguridad automatizados:
+
+1. Validación de la estructura del repositorio.
+2. Análisis SAST mediante Semgrep.
+3. Escaneo de vulnerabilidades en dependencias con Trivy.
+4. Generación automática de SBOM mediante CycloneDX.
+5. Construcción de una imagen Docker segura.
+6. Escaneo de vulnerabilidades de la imagen Docker.
+
+La rama vulnerable está diseñada para fallar durante la fase SAST debido a la presencia de vulnerabilidades intencionadas en el código fuente. Sin embargo, el resto de controles continúan ejecutándose para proporcionar visibilidad completa sobre los riesgos de seguridad detectados.
