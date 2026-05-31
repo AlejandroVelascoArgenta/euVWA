@@ -1017,3 +1017,21 @@ El pipeline DevSecOps final integra los siguientes controles de seguridad automa
 6. Escaneo de vulnerabilidades de la imagen Docker.
 
 La rama vulnerable está diseñada para fallar durante la fase SAST debido a la presencia de vulnerabilidades intencionadas en el código fuente. Sin embargo, el resto de controles continúan ejecutándose para proporcionar visibilidad completa sobre los riesgos de seguridad detectados.
+
+#### Análisis DAST con OWASP ZAP
+
+![OWASP ZAP DAST](docs/images/dast_analisys.png)
+![OWASP ZAP DAST](docs/images/zap_dast_scan.png)
+Se integró OWASP ZAP Baseline Scan dentro del pipeline DevSecOps para realizar análisis dinámico de seguridad (DAST) sobre la aplicación vulnerable.
+
+A diferencia del análisis SAST realizado por Semgrep, OWASP ZAP evalúa la aplicación en ejecución simulando el comportamiento de un atacante real.
+
+Durante el análisis se identificaron diversas debilidades de seguridad, entre ellas:
+
+- Ausencia de tokens Anti-CSRF.
+- Problemas de gestión de sesiones.
+- Falta de determinadas cabeceras de seguridad HTTP.
+- Posible exposición de información sensible.
+- Configuraciones inseguras detectables durante la ejecución.
+
+El escaneo genera automáticamente un informe de resultados y permite incorporar controles de seguridad dinámicos dentro del ciclo DevSecOps.
