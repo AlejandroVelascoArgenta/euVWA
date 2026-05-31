@@ -8,7 +8,6 @@ RUN npm ci --omit=dev
 
 COPY secure/src ./src
 COPY secure/views ./views
-COPY secure/data ./data
 
 RUN addgroup -S appgroup && adduser -S appuser -G appgroup
 USER appuser
