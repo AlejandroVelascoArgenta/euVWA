@@ -40,10 +40,29 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Run Semgrep security audit
+      - name: Run Semgrep security audit on vulnerable branch
+        if: github.ref_name == 'main-vulnerable'
         uses: semgrep/semgrep-action@v1
         with:
           config: p/security-audit
+          publishToken: ''
+          args: vulnerable/
+
+      - name: Run Semgrep security audit on secure branch
+        if: github.ref_name == 'main-secure'
+        uses: semgrep/semgrep-action@v1
+        with:
+          config: p/security-audit
+          publishToken: ''
+          args: secure/
+
+      - name: Run Semgrep security audit on DevSecOps branch
+        if: github.ref_name == 'actividad-2-devsecops'
+        uses: semgrep/semgrep-action@v1
+        with:
+          config: p/security-audit
+          publishToken: ''
+          args: vulnerable/
 
   dependency-scan:
     name: Dependency Scan - Trivy
