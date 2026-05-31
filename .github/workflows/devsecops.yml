@@ -1,0 +1,31 @@
+name: DevSecOps Pipeline
+
+on:
+  push:
+    branches:
+      - actividad-2-devsecops
+      - main-secure
+      - main-vulnerable
+  pull_request:
+    branches:
+      - actividad-2-devsecops
+      - main-secure
+      - main-vulnerable
+
+jobs:
+  basic-validation:
+    name: Basic project validation
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Validate repository structure
+        run: |
+          echo "Validating euVWA project structure..."
+          test -d vulnerable
+          test -d secure
+          test -f README.md
+          test -f docker-compose.yml
+          echo "Repository structure is valid."
