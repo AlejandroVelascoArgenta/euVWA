@@ -138,3 +138,25 @@ git commit -m "Add secure authentication and authorization middleware"
 git commit -m "Harden file upload, command execution and app security headers"
 git commit -m "Document exploitation steps and secure mitigations"
 ```
+
+
+
+
+
+
+# Actividad 2 - Pipeline DevSecOps
+
+## Objetivo
+
+Partiendo de la aplicación euVWA desarrollada en la Actividad 1, se implementa un pipeline DevSecOps completo utilizando GitHub Actions.
+
+El objetivo es integrar controles de seguridad automatizados dentro del ciclo de vida del desarrollo, aplicando el enfoque Shift Left para 
+detectar vulnerabilidades desde fases tempranas del desarrollo hasta el despliegue.
+
+
+## Estrategia de ramas
+
+Para mantener separada la Actividad 2 de la entrega anterior, se ha creado una rama específica:
+
+```text
+actividad-2-devsecops
