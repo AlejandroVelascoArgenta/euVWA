@@ -930,3 +930,37 @@ Durante la ejecución del pipeline, Trivy completó correctamente el análisis d
 #### Ejecución correcta de Trivy
 
 ![Trivy Scan](docs/images/trivy_scan_results.png)
+
+## Software Bill of Materials (SBOM)
+
+### Generación automática de SBOM con Trivy
+
+Como parte del pipeline DevSecOps se ha incorporado la generación automática de un Software Bill of Materials (SBOM) utilizando Trivy y el estándar CycloneDX.
+
+El SBOM proporciona un inventario completo de las dependencias y componentes software presentes en el proyecto, permitiendo identificar bibliotecas utilizadas, versiones instaladas y posibles riesgos asociados a la cadena de suministro de software.
+
+### Ejecución completa del pipeline
+
+![Pipeline Overview](docs/images/devsecops_pipeline_overview.png)
+
+La ejecución del pipeline muestra la integración de las diferentes fases de seguridad automatizadas. Semgrep detecta la vulnerabilidad de Command Injection presente en la versión vulnerable de la aplicación, mientras que Trivy y la generación de SBOM finalizan correctamente.
+
+### Ejecución del job SBOM Generation
+
+![SBOM Generation](docs/images/semgrep_command_injection_findings2.png)
+
+GitHub Actions genera automáticamente un SBOM en formato CycloneDX durante la ejecución del pipeline.
+
+### Artefacto generado
+
+![SBOM Artifact](docs/images/sbom_artifact.png)
+
+El artefacto generado puede descargarse desde GitHub Actions y contiene el inventario completo de componentes y dependencias detectadas en el proyecto.
+
+### Beneficios de utilizar SBOM
+
+- Inventario completo de componentes software.
+- Mayor visibilidad sobre dependencias directas e indirectas.
+- Facilita auditorías de seguridad.
+- Mejora la gestión de vulnerabilidades.
+- Ayuda al cumplimiento de buenas prácticas DevSecOps y Supply Chain Security.
