@@ -857,3 +857,42 @@ Esta validación inicial permite asegurar la integridad mínima del repositorio 
 ### Evidencia
 
 ![Pipeline inicial GitHub Actions](docs/images/github_actions_pipeline_success.png)
+
+
+## SAST con Semgrep
+
+Como herramienta de análisis estático (SAST) se ha integrado Semgrep dentro del pipeline de GitHub Actions.
+
+Semgrep analiza automáticamente el código fuente en cada push o pull request utilizando reglas de seguridad predefinidas.
+
+Durante la ejecución sobre la rama vulnerable, Semgrep detectó una vulnerabilidad real correspondiente a la práctica de Command Injection implementada en la aplicación.
+
+El hallazgo detectado se encuentra en:
+
+```text
+vulnerable/src/routes.js
+```
+
+y corresponde al uso inseguro de:
+
+```js
+exec(`ping -c 2 ${req.body.host}`)
+```
+
+Semgrep identifica este patrón como potencialmente vulnerable a Command Injection debido al uso de entrada controlada por el usuario dentro de una llamada a `child_process.exec()`.
+
+Al tratarse de una regla bloqueante, el pipeline finaliza con error, demostrando la capacidad del proceso DevSecOps para impedir la promoción de código inseguro.
+
+### Evidencias
+
+#### Pipeline detectando vulnerabilidades
+
+![Semgrep Finding 1](docs/images/semgrep_command_injection_finding1.png)
+
+#### Ejecución del análisis SAST
+
+![Semgrep Finding 2](docs/images/semgrep_command_injection_finding2.png)
+
+#### Hallazgo de Command Injection
+
+![Semgrep Finding 3](docs/images/semgrep_command_injection_finding3.png)
