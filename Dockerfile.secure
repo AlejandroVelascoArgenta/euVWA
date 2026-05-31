@@ -4,8 +4,7 @@ WORKDIR /app
 
 COPY secure/package*.json ./
 
-RUN npm ci --omit=dev
-
+RUN npm install --omit=dev
 COPY secure/src ./src
 COPY secure/views ./views
 
