@@ -896,3 +896,37 @@ Al tratarse de una regla bloqueante, el pipeline finaliza con error, demostrando
 #### Hallazgo de Command Injection
 
 ![Semgrep Finding 3](docs/images/semgrep_command_injection_finding3.png)
+
+
+## Escaneo de dependencias con Trivy
+
+Además del análisis estático de código (SAST) mediante Semgrep, se ha incorporado Trivy como herramienta de análisis de vulnerabilidades en dependencias y componentes del proyecto.
+
+Trivy se ejecuta automáticamente dentro del pipeline de GitHub Actions mediante un escaneo de tipo filesystem (`fs`), analizando el contenido completo del repositorio en busca de vulnerabilidades conocidas.
+
+Configuración utilizada:
+
+```yaml
+- name: Run Trivy filesystem scan
+  uses: aquasecurity/trivy-action@master
+  with:
+    scan-type: fs
+    scan-ref: .
+    format: table
+```
+
+Durante la ejecución del pipeline, Trivy completó correctamente el análisis del proyecto, demostrando la integración de controles automáticos de seguridad sobre dependencias y componentes utilizados por la aplicación.
+
+### Evidencias
+
+#### Pipeline DevSecOps con Semgrep y Trivy
+
+![Pipeline DevSecOps](docs/images/semgrep_pipeline_execution.png)
+
+#### Detección de vulnerabilidad mediante Semgrep
+
+![Semgrep Finding](docs/images/semgrep_command_injection_finding.png)
+
+#### Ejecución correcta de Trivy
+
+![Trivy Scan](docs/images/trivy_scan_results.png)
